@@ -1,12 +1,13 @@
-import { useRef } from 'react'
 import { useSearchParams } from 'react-router-dom'
 import FilterBlock from './components/filterBlock'
 import FilterItems from './components/filterItems'
+import ShowRepo from './components/showRepo'
 
 export default function Search() {
     const [query, setQuery] = useSearchParams('')
 
     const searchQuery = query.get('q')
+    const repos = [] // todo...
     return (
         <div id='body' className='flex gap-2 h-screen p-2'>
             <div
@@ -135,7 +136,11 @@ export default function Search() {
                 </form>
                 <div id='section' className='border-b-2 border-stone-500 mt-4'></div>
                 <div id='showResults'>
-                    <div id='showRepos'></div>
+                    <div id='showRepos'>
+                        {repos.map(repo => (
+                            <ShowRepo repo={repo} />
+                        ))}
+                    </div>
                     <div id='showUsers'></div>
                 </div>
             </div>
