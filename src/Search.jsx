@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react'
 import { useSearchParams } from 'react-router-dom'
 import FilterBlock from './components/filterBlock'
 import FilterItems from './components/filterItems'
@@ -6,10 +7,25 @@ import ShowUser from './components/showUser'
 
 export default function Search() {
     const [query, setQuery] = useSearchParams('')
+    const [repos, setRepos] = useState([])
+    const [users, setUsers] = useState([])
 
     const searchQuery = query.get('q')
-    const repos = [] // todo...
-    const users = []
+    const homeFilter = query.get('homeFilter')
+    const isUsers = homeFilter === 'All' || homeFilter === 'Users'
+    const isRepos = homeFilter === 'All' || homeFilter === 'Repositories'
+
+    const host = 'https://api.github.com'
+
+    useEffect(() => {
+        if (isRepos) {
+            fetch(host + '/search/repositories' + `?q=${searchQuery}` + '&per_page=100')
+                .then(res => res.json())
+                .then(jsonData => setRepos(jsonData.items))
+                .catch(e => console.log('error occoured', e))
+        }
+    }, [query])
+    console.log(repos.length)
     return (
         <div id='body' className='flex gap-2 h-screen p-2'>
             <div
@@ -131,19 +147,21 @@ export default function Search() {
                     </div>
                 </div>
             </div>
-            <div id='mainSection' className='flex-auto rounded-xl border-2 border-stone-500 p-4'>
-                <form className='border-2 focus-within:border-purple-500 rounded-xl w-fit overflow-hidden pl-2 m-auto'>
+            <div
+                id='mainSection'
+                className='flex flex-col flex-auto rounded-xl border-2 border-stone-500 w-10 overflow-hidden'>
+                <form className='border-2 focus-within:border-purple-500 rounded-xl w-fit overflow-hidden pl-2 my-4 m-auto basis-72'>
                     <input type='text' name='q' className='focus-within:outline-none text-base w-96' />
                     <button className='bg-stone-400 m-1 rounded-xl p-1'>Search</button>
                 </form>
-                <div id='section' className='border-b-2 border-stone-500 mt-4'></div>
-                <div id='showResults'>
-                    <div id='showRepos'>
+                <div id='section' className='border-b-2 border-stone-300 mx-1'></div>
+                <div id='showResults' className='overflow-scroll '>
+                    <div id='showRepos' className='px-3'>
                         {repos.map(repo => (
                             <ShowRepo key={repo.id} repo={repo} />
                         ))}
                     </div>
-                    <div id='showUsers'>
+                    <div id='showUsers' className='px-3'>
                         {users.map(user => (
                             <ShowUser key={user.login} user={user} />
                         ))}

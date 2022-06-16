@@ -3,15 +3,15 @@ import { parseJSON, formatDistanceToNow } from 'date-fns'
 
 export default function ShowRepo({ repo }) {
     return (
-        <div className='border-2 rounded-md my-2 p-4'>
-            <Link to={'/repo/' + repo.id} className='text-lg text-blue-500 hover:underline'>
-                <h3>
+        <div className='border-2 rounded-md my-2 px-4 py-3'>
+            <h3 className='w-fit'>
+                <Link to={'/repo/' + repo.id} className='text-lg text-blue-500 hover:underline'>
                     {repo.owner.login + '/'}
                     <span className=' font-semibold'>{repo.name}</span>
-                </h3>
-            </Link>
+                </Link>
+            </h3>
             <div>{repo.description}</div>
-            <div id='topicsButtons' className='flex gap-2 items-start my-1'>
+            <div id='topicsButtons' className='flex gap-2 items-start my-1 overflow-scroll'>
                 {repo.topics.map(topic => (
                     <Link
                         to={'/topic/' + topic}
@@ -38,8 +38,8 @@ export default function ShowRepo({ repo }) {
                     </svg>
                     <div>{repo.stargazers_count}</div>
                 </div>
-                <div>{repo.language}</div>
-                <div>{repo.license.name}</div>
+                <div>{repo?.language}</div>
+                <div>{repo?.license?.name}</div>
                 <div>{'Updated ' + formatDistanceToNow(parseJSON(repo.updated_at), { addSuffix: true })}</div>
             </div>
         </div>
