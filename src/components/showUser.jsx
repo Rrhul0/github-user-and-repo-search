@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
+import Loading from './loading'
 
 function ShowUser({ user }) {
     return (
@@ -30,17 +31,22 @@ function ShowUser({ user }) {
 
 export default function ShowUsers({ show, query }) {
     const [users, setUsers] = useState([])
+    const [isLoading, setIsLoading] = useState(true)
 
     const host = 'https://api.github.com'
     useEffect(() => {
         if (!users.length && show) {
             fetch(host + '/search/users' + `?q=${query}`)
                 .then(res => res.json())
-                .then(jsonData => setUsers(jsonData.items))
+                .then(jsonData => {
+                    setUsers(jsonData.items)
+                    setIsLoading(false)
+                })
                 .catch(e => console.log('error occoured', e))
         }
     }, [show, query])
-    if (!show || !users) return <></>
+    if (!show) return <></>
+    if (isLoading || !users) return <Loading />
     return (
         <div className='px-2 overflow-scroll h-full'>
             {users.map(user => (

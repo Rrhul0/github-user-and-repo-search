@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom'
 import { useState, useEffect } from 'react'
 import { parseJSON, formatDistanceToNow } from 'date-fns'
+import Loading from './loading'
 
 function ShowRepo({ repo }) {
     return (
@@ -53,7 +54,6 @@ export default function ShowRepos({ show, query }) {
 
     const host = 'https://api.github.com'
     useEffect(() => {
-        console.log(repos.length, show)
         if (!repos.length && show) {
             fetch(host + '/search/repositories' + `?q=${query}`)
                 .then(res => res.json())
@@ -65,7 +65,7 @@ export default function ShowRepos({ show, query }) {
         }
     }, [show, query])
     if (!show) return <></>
-    if (isLoading || !repos) return <>loading</>
+    if (isLoading || !repos) return <Loading />
     return (
         <div className='px-2 overflow-scroll h-full'>
             {repos.map(repo => (
