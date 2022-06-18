@@ -1,7 +1,8 @@
 import { Link } from 'react-router-dom'
+import { useState, useEffect } from 'react'
 import { parseJSON, formatDistanceToNow } from 'date-fns'
 
-export default function ShowRepo({ repo }) {
+function ShowRepo({ repo }) {
     return (
         <div className='border-2 rounded-md my-2 px-4 py-3'>
             <h3 className='w-fit'>
@@ -38,10 +39,38 @@ export default function ShowRepo({ repo }) {
                     </svg>
                     <div>{repo.stargazers_count}</div>
                 </div>
-                <div>{repo?.language}</div>
-                <div>{repo?.license?.name}</div>
+                {repo.language ? <div>{repo.language}</div> : ''}
+                {repo.license ? <div>{repo.license?.name}</div> : ''}
                 <div>{'Updated ' + formatDistanceToNow(parseJSON(repo.updated_at), { addSuffix: true })}</div>
             </div>
+        </div>
+    )
+}
+
+export default function ShowRepos({ show, query }) {
+    const [repos, setRepos] = useState([])
+    const [isLoading, setIsLoading] = useState(true)
+
+    const host = 'https://api.github.com'
+    useEffect(() => {
+        console.log(repos.length, show)
+        if (!repos.length && show) {
+            fetch(host + '/search/repositories' + `?q=${query}`)
+                .then(res => res.json())
+                .then(jsonData => {
+                    setRepos(jsonData.items)
+                    setIsLoading(false)
+                })
+                .catch(e => console.log('error occoured', e))
+        }
+    }, [show, query])
+    if (!show) return <></>
+    if (isLoading || !repos) return <>loading</>
+    return (
+        <div className='px-2 overflow-scroll h-full'>
+            {repos.map(repo => (
+                <ShowRepo key={repo.id} repo={repo} />
+            ))}
         </div>
     )
 }
