@@ -32,10 +32,18 @@ function ShowUser({ user }) {
 export default function ShowUsers({ show, query }) {
     const [users, setUsers] = useState([])
     const [isLoading, setIsLoading] = useState(true)
+    const [isQueryChanged, setIsQueryChanged] = useState(false)
 
     const host = 'https://api.github.com'
+
+    //set setIsQueryChnage to true when query changes
     useEffect(() => {
-        if (!users.length && show) {
+        setIsQueryChanged(true)
+    }, [query])
+
+    useEffect(() => {
+        // dont run when show is false
+        if ((!users.length || isQueryChanged) && show) {
             fetch(host + '/search/users' + `?q=${query}`)
                 .then(res => res.json())
                 .then(jsonData => {
@@ -43,8 +51,10 @@ export default function ShowUsers({ show, query }) {
                     setIsLoading(false)
                 })
                 .catch(e => console.log('error occoured', e))
+            setIsQueryChanged(false)
         }
-    }, [show, query])
+    }, [show, isQueryChanged])
+
     if (!show) return <></>
     if (isLoading || !users) return <Loading />
     return (

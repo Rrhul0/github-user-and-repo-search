@@ -51,10 +51,19 @@ function ShowRepo({ repo }) {
 export default function ShowRepos({ show, query }) {
     const [repos, setRepos] = useState([])
     const [isLoading, setIsLoading] = useState(true)
+    const [isQueryChanged, setIsQueryChanged] = useState(false)
 
     const host = 'https://api.github.com'
+
+    //set setIsQueryChnage to true when query changes
     useEffect(() => {
-        if (!repos.length && show) {
+        setIsQueryChanged(true)
+    }, [query])
+
+    useEffect(() => {
+        // dont run when show is false
+        //but run when show is true and query changes or when not have older result to show
+        if ((!repos.length || isQueryChanged) && show) {
             fetch(host + '/search/repositories' + `?q=${query}`)
                 .then(res => res.json())
                 .then(jsonData => {
@@ -62,8 +71,10 @@ export default function ShowRepos({ show, query }) {
                     setIsLoading(false)
                 })
                 .catch(e => console.log('error occoured', e))
+            setIsQueryChanged(false)
         }
-    }, [show, query])
+    }, [show, isQueryChanged])
+
     if (!show) return <></>
     if (isLoading || !repos) return <Loading />
     return (

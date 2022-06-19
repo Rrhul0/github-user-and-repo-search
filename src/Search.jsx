@@ -14,7 +14,6 @@ export default function Search() {
     useEffect(() => {
         if (!show) setQuery(new URLSearchParams({ q: searchQuery, show: 'repo' }))
     }, [])
-    console.log(show)
     const isUsers = show === 'user'
     const isRepos = show === 'repo'
 
@@ -155,7 +154,13 @@ export default function Search() {
                 )}
             </div>
             <div id='mainSection' className=' flex-auto rounded-xl border-2 border-stone-500 w-10 overflow-hidden'>
-                <form className='border-2 focus-within:border-purple-500 rounded-xl w-fit overflow-hidden pl-2 my-4 m-auto h-11'>
+                <form
+                    onSubmit={e => {
+                        e.preventDefault()
+                        if (!inputValue) return
+                        setQuery(new URLSearchParams({ q: inputValue, show: show }))
+                    }}
+                    className='border-2 focus-within:border-purple-500 rounded-xl w-fit overflow-hidden pl-2 my-4 m-auto h-11'>
                     <input
                         type='text'
                         name='q'
