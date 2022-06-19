@@ -1,7 +1,5 @@
-import { useState } from 'react'
 import { useSearchParams } from 'react-router-dom'
 import FilterBlock from './components/filterBlock'
-import FilterItems from './components/filterItems'
 import ShowRepos from './components/showRepo'
 import ShowUsers from './components/showUser'
 
@@ -33,115 +31,121 @@ export default function Search() {
                         Users
                     </div>
                 </div>
-                <div
-                    id='repoFilter'
-                    className={(!isRepos ? 'hidden' : '') + ' rounded-xl border-2 border-stone-400 p-2'}>
-                    <FilterBlock
-                        name='Languages'
-                        items={['Python', 'Javascript', 'Java', 'C++', 'Rust', 'Kotlin', 'Shift']}
-                        type='checkbox'
-                    />
-                    <FilterBlock
-                        name='Forks Counts'
-                        items={['Any', '0-10', '11-25', '26-50', '51-100', '101-500', '501-1000', 'more then 1000']}
-                        type='radio'
-                    />
-                    <FilterBlock
-                        name='Star Counts'
-                        items={['Any', '0-10', '11-25', '26-50', '51-100', '101-500', '501-1000', 'more then 1000']}
-                        type='radio'
-                    />
-                    <FilterBlock
-                        name='Created Time'
-                        items={[
-                            'Today',
-                            'Yesterday',
-                            'Last 7 Days',
-                            'This Month',
-                            'This Year',
-                            'Last Year',
-                            'Last 5 Years',
-                            'Last 10 Years',
-                            'Older then 10 Years',
-                        ]}
-                        type='radio'
-                    />
-                    <FilterBlock
-                        name='Updated Time'
-                        items={[
-                            'This Hour',
-                            'Last Hour',
-                            'Last 5 Hours',
-                            'Today',
-                            'Yesterday',
-                            'Last 7 Days',
-                            'This Month',
-                            'This Year',
-                            'Last Year',
-                            'Last 5 Years',
-                            'Last 10 Years',
-                            'Older then 10 Years',
-                        ]}
-                        type='radio'
-                    />
-                </div>
-                <div
-                    id='userFilter'
-                    className={(!isUsers ? 'hidden' : '') + ' rounded-xl border-2 border-stone-400 p-2'}>
-                    <FilterBlock
-                        name='Repositories Count'
-                        items={['0-2', '3-10', '11-25', '26-50', '51-100', '101-500', 'More then 500']}
-                        type='radio'
-                    />
-                    <FilterBlock
-                        name='Followers'
-                        items={['0-2', '3-10', '11-25', '26-50', '51-100', '101-500', 'More then 500']}
-                        type='radio'
-                    />
-                    <FilterBlock
-                        name='Following'
-                        items={['0-2', '3-10', '11-25', '26-50', '51-100', '101-500', 'More then 500']}
-                        type='radio'
-                    />
-                    <FilterBlock
-                        name='Gists Count'
-                        items={['0-2', '3-10', '11-25', '26-50', '51-100', '101-500', 'More then 500']}
-                        type='radio'
-                    />
-                    <FilterBlock
-                        name='Created Time'
-                        items={[
-                            'Today',
-                            'Yesterday',
-                            'Last 7 Days',
-                            'This Month',
-                            'This Year',
-                            'Last Year',
-                            'Last 5 Years',
-                            'Last 10 Years',
-                            'Older then 10 Years',
-                        ]}
-                        type='radio'
-                    />
-                    <FilterBlock
-                        name='Updated Time'
-                        items={[
-                            'This Hour',
-                            'Last Hour',
-                            'Last 5 Hours',
-                            'Today',
-                            'Yesterday',
-                            'Last 7 Days',
-                            'This Month',
-                            'This Year',
-                            'Last Year',
-                            'Last 5 Years',
-                            'Last 10 Years',
-                            'Older then 10 Years',
-                        ]}
-                        type='radio'
-                    />
-                </div>
+                {isRepos ? (
+                    <div id='repoFilter' className=' rounded-xl border-2 border-stone-400 p-2'>
+                        <FilterBlock
+                            name='Languages'
+                            items={['Python', 'Javascript', 'Java', 'C++', 'Rust', 'Kotlin', 'Shift']}
+                            type='checkbox'
+                        />
+                        <FilterBlock
+                            name='Forks Counts'
+                            items={['Any', '0-10', '11-25', '26-50', '51-100', '101-500', '501-1000', 'more then 1000']}
+                            type='radio'
+                        />
+                        <FilterBlock
+                            name='Star Counts'
+                            items={['Any', '0-10', '11-25', '26-50', '51-100', '101-500', '501-1000', 'more then 1000']}
+                            type='radio'
+                        />
+                        <FilterBlock
+                            name='Created Time'
+                            items={[
+                                'Today',
+                                'Yesterday',
+                                'Last 7 Days',
+                                'This Month',
+                                'This Year',
+                                'Last Year',
+                                'Last 5 Years',
+                                'Last 10 Years',
+                                'Older then 10 Years',
+                            ]}
+                            type='radio'
+                        />
+                        <FilterBlock
+                            name='Updated Time'
+                            items={[
+                                'This Hour',
+                                'Last Hour',
+                                'Last 5 Hours',
+                                'Today',
+                                'Yesterday',
+                                'Last 7 Days',
+                                'This Month',
+                                'This Year',
+                                'Last Year',
+                                'Last 5 Years',
+                                'Last 10 Years',
+                                'Older then 10 Years',
+                            ]}
+                            type='radio'
+                        />
+                    </div>
+                ) : (
+                    ''
+                )}
+                {isUsers ? (
+                    <div
+                        id='userFilter'
+                        className={(!isUsers ? 'hidden' : '') + ' rounded-xl border-2 border-stone-400 p-2'}>
+                        <FilterBlock
+                            name='Repositories Count'
+                            items={['0-2', '3-10', '11-25', '26-50', '51-100', '101-500', 'More then 500']}
+                            type='radio'
+                        />
+                        <FilterBlock
+                            name='Followers'
+                            items={['0-2', '3-10', '11-25', '26-50', '51-100', '101-500', 'More then 500']}
+                            type='radio'
+                        />
+                        <FilterBlock
+                            name='Following'
+                            items={['0-2', '3-10', '11-25', '26-50', '51-100', '101-500', 'More then 500']}
+                            type='radio'
+                        />
+                        <FilterBlock
+                            name='Gists Count'
+                            items={['0-2', '3-10', '11-25', '26-50', '51-100', '101-500', 'More then 500']}
+                            type='radio'
+                        />
+                        <FilterBlock
+                            name='Created Time'
+                            items={[
+                                'Today',
+                                'Yesterday',
+                                'Last 7 Days',
+                                'This Month',
+                                'This Year',
+                                'Last Year',
+                                'Last 5 Years',
+                                'Last 10 Years',
+                                'Older then 10 Years',
+                            ]}
+                            type='radio'
+                        />
+                        <FilterBlock
+                            name='Updated Time'
+                            items={[
+                                'This Hour',
+                                'Last Hour',
+                                'Last 5 Hours',
+                                'Today',
+                                'Yesterday',
+                                'Last 7 Days',
+                                'This Month',
+                                'This Year',
+                                'Last Year',
+                                'Last 5 Years',
+                                'Last 10 Years',
+                                'Older then 10 Years',
+                            ]}
+                            type='radio'
+                        />
+                    </div>
+                ) : (
+                    ''
+                )}
             </div>
             <div id='mainSection' className=' flex-auto rounded-xl border-2 border-stone-500 w-10 overflow-hidden'>
                 <form className='border-2 focus-within:border-purple-500 rounded-xl w-fit overflow-hidden pl-2 my-4 m-auto h-11'>
