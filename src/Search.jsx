@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react'
 import { useSearchParams } from 'react-router-dom'
 import FilterBlock from './components/filterBlock'
 import ShowRepos from './components/showRepo'
@@ -5,9 +6,15 @@ import ShowUsers from './components/showUser'
 
 export default function Search() {
     const [query, setQuery] = useSearchParams('')
+    const [inputValue, setInputValue] = useState(query.get('q'))
 
     const searchQuery = query.get('q')
     const show = query.get('show')
+    //if show in undefined then add show to query
+    useEffect(() => {
+        if (!show) setQuery(new URLSearchParams({ q: searchQuery, show: 'repo' }))
+    }, [])
+    console.log(show)
     const isUsers = show === 'user'
     const isRepos = show === 'repo'
 
@@ -149,7 +156,13 @@ export default function Search() {
             </div>
             <div id='mainSection' className=' flex-auto rounded-xl border-2 border-stone-500 w-10 overflow-hidden'>
                 <form className='border-2 focus-within:border-purple-500 rounded-xl w-fit overflow-hidden pl-2 my-4 m-auto h-11'>
-                    <input type='text' name='q' className='focus-within:outline-none text-base w-96' />
+                    <input
+                        type='text'
+                        name='q'
+                        className='focus-within:outline-none text-base w-96'
+                        value={inputValue}
+                        onChange={e => setInputValue(e.target.value)}
+                    />
                     <button className='bg-stone-400 m-1 rounded-xl p-1'>Search</button>
                 </form>
                 <div id='section' className='border-b-2 border-stone-300 mx-1'></div>
