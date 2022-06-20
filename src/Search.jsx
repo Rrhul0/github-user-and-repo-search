@@ -1,22 +1,23 @@
 import { useEffect, useState } from 'react'
-import { useSearchParams } from 'react-router-dom'
+import { useSearchParams, useNavigate } from 'react-router-dom'
 import FilterBlock from './components/filterBlock'
 import ShowRepos from './components/showRepo'
 import ShowUsers from './components/showUser'
 
 export default function Search() {
     const [query, setQuery] = useSearchParams('')
-    const [inputValue, setInputValue] = useState(query.get('q'))
+    const [inputValue, setInputValue] = useState(query.get('q') ? query.get('q') : '')
+    const navigate = useNavigate()
 
-    const searchQuery = query.get('q')
-    const show = query.get('show')
-    //if show in undefined then add show to query
+    const show = ['repo', 'user'].includes(query.get('show')) ? query.get('show') : 'repo'
+    const searchQuery = query.get('q') ? query.get('q') : ''
     useEffect(() => {
-        if (!show) setQuery(new URLSearchParams({ q: searchQuery, show: 'repo' }))
-    }, [])
+        if (!searchQuery) navigate('/')
+    }, [searchQuery])
     const isUsers = show === 'user'
     const isRepos = show === 'repo'
 
+    if (!searchQuery) return <></>
     return (
         <div id='body' className='flex gap-2 h-screen p-2 overflow-hidden'>
             <div
