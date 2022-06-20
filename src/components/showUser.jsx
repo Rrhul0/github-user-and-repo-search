@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import Loading from './loading'
 import PageSelector from './pageSelector'
+import NoResult from './noResult'
 
 function ShowUser({ user }) {
     return (
@@ -71,7 +72,9 @@ export default function ShowUsers({ show, query }) {
     }, [show, isQueryChanged, isPageChanged])
 
     if (!show) return <></>
-    if (isLoading || !users) return <Loading />
+    if (isLoading) return <Loading />
+    if (!users.length) return <NoResult />
+
     return (
         <div className='px-2 overflow-scroll h-full'>
             <div>
@@ -79,7 +82,11 @@ export default function ShowUsers({ show, query }) {
                     <ShowUser key={user.login} user={user} />
                 ))}
             </div>
-            <PageSelector currentPage={currentPage} totalPages={pagesCount} onPageChange={setCurrentPage} />
+            {pagesCount > 1 ? (
+                <PageSelector currentPage={currentPage} totalPages={pagesCount} onPageChange={setCurrentPage} />
+            ) : (
+                ''
+            )}
         </div>
     )
 }

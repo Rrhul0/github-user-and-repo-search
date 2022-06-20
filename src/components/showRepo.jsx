@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react'
 import { parseJSON, formatDistanceToNow } from 'date-fns'
 import Loading from './loading'
 import PageSelector from './pageSelector'
+import NoResult from './noResult'
 
 function ShowRepo({ repo }) {
     return (
@@ -107,7 +108,9 @@ export default function ShowRepos({ show, query }) {
     }, [show, isQueryChanged, isPageChanged])
 
     if (!show) return <></>
-    if (isLoading || !repos) return <Loading />
+    if (isLoading) return <Loading />
+    if (!repos.length) return <NoResult />
+
     return (
         <div className='px-2 overflow-scroll h-full'>
             <div>
@@ -115,7 +118,11 @@ export default function ShowRepos({ show, query }) {
                     <ShowRepo key={repo.id} repo={repo} />
                 ))}
             </div>
-            <PageSelector currentPage={currentPage} totalPages={pagesCount} onPageChange={setCurrentPage} />
+            {pagesCount > 1 ? (
+                <PageSelector currentPage={currentPage} totalPages={pagesCount} onPageChange={setCurrentPage} />
+            ) : (
+                ''
+            )}
         </div>
     )
 }
