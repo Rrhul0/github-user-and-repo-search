@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { useSearchParams, useNavigate } from 'react-router-dom'
+import { useSearchParams, useNavigate, createSearchParams } from 'react-router-dom'
 import FilterBlock from './components/filterBlock'
 import ShowRepos from './components/showRepo'
 import ShowUsers from './components/showUser'
@@ -9,15 +9,20 @@ export default function Search() {
     const [inputValue, setInputValue] = useState(query.get('q') ? query.get('q') : '')
     const navigate = useNavigate()
 
-    const show = ['repo', 'user'].includes(query.get('show')) ? query.get('show') : 'repo'
+    const show = query.get('show') ? query.get('show') : ''
     const searchQuery = query.get('q') ? query.get('q') : ''
+
+    //fixing searchParams
     useEffect(() => {
         if (!searchQuery) navigate('/')
-    }, [searchQuery])
+        if (!show || query.getAll('show').length > 1 || !['repo', 'user'].includes(show))
+            setQuery(appendSearchParams(query, { show: 'repo' }))
+    }, [query])
+
     const isUsers = show === 'user'
     const isRepos = show === 'repo'
 
-    if (!searchQuery) return <></>
+    if (!searchQuery || !show) return <></>
     return (
         <div id='body' className='flex gap-2 h-screen p-2 overflow-hidden'>
             <div
@@ -36,10 +41,8 @@ export default function Search() {
                             <svg
                                 aria-hidden='true'
                                 className='h-4 w-4'
-                                // height='16'
                                 viewBox='0 0 16 16'
                                 version='1.1'
-                                // width='16'
                                 data-view-component='true'>
                                 <path
                                     fillRule='evenodd'
@@ -214,4 +217,16 @@ export default function Search() {
             </div>
         </div>
     )
+}
+
+function appendSearchParams(searchParams, obj) {
+    const sp = createSearchParams(searchParams)
+    Object.entries(obj).forEach(([key, value]) => {
+        if (value === undefined) {
+            sp.delete(key)
+        } else {
+            sp.set(key, value)
+        }
+    })
+    return sp
 }
