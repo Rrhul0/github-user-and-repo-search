@@ -22,18 +22,53 @@ export default function Search() {
             <div
                 id='sideFilterBar'
                 className='flex flex-col gap-2 rounded-xl border-2 border-stone-500 basis-1/5 p-2 overflow-scroll'>
-                <div className='text-lg rounded-md bg-stone-200 border-2 border-purple-600 cursor-pointer'>
+                <div className='text-lg rounded-md border border-purple-300 cursor-pointer overflow-hidden'>
                     <div
                         onClick={e => setQuery({ q: searchQuery, show: 'repo' })}
                         className={
-                            (isRepos ? 'bg-stone-400' : ' hover:bg-stone-300') +
-                            ' border-b-2 border-blue-400 pl-4 py-2 '
+                            (isRepos
+                                ? 'border-l-[3px] border-l-orange-500 pl-2'
+                                : 'pl-[calc(0.5rem+3px)] hover:bg-stone-100 ') +
+                            ' border-b border-purple-300 h-10 flex gap-2 items-center'
                         }>
+                        <div>
+                            <svg
+                                aria-hidden='true'
+                                className='h-4 w-4'
+                                // height='16'
+                                viewBox='0 0 16 16'
+                                version='1.1'
+                                // width='16'
+                                data-view-component='true'>
+                                <path
+                                    fillRule='evenodd'
+                                    d='M2 2.5A2.5 2.5 0 014.5 0h8.75a.75.75 0 01.75.75v12.5a.75.75 0 01-.75.75h-2.5a.75.75 0 110-1.5h1.75v-2h-8a1 1 0 00-.714 1.7.75.75 0 01-1.072 1.05A2.495 2.495 0 012 11.5v-9zm10.5-1V9h-8c-.356 0-.694.074-1 .208V2.5a1 1 0 011-1h8zM5 12.25v3.25a.25.25 0 00.4.2l1.45-1.087a.25.25 0 01.3 0L8.6 15.7a.25.25 0 00.4-.2v-3.25a.25.25 0 00-.25-.25h-3.5a.25.25 0 00-.25.25z'></path>
+                            </svg>
+                        </div>
                         Repositories
                     </div>
                     <div
                         onClick={e => setQuery({ q: searchQuery, show: 'user' })}
-                        className={(isUsers ? 'bg-stone-400' : ' hover:bg-stone-300') + ' pl-4 py-2'}>
+                        className={
+                            (isUsers
+                                ? 'border-l-[3px] border-l-orange-500 pl-2'
+                                : 'pl-[calc(0.5rem+3px)] hover:bg-stone-100') + ' h-10 flex gap-2 items-center '
+                        }>
+                        <div>
+                            <svg
+                                xmlns='http://www.w3.org/2000/svg'
+                                className='h-4 w-4'
+                                fill='none'
+                                viewBox='0 0 24 24'
+                                stroke='currentColor'
+                                strokeWidth={2}>
+                                <path
+                                    strokeLinecap='round'
+                                    strokeLinejoin='round'
+                                    d='M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z'
+                                />
+                            </svg>
+                        </div>
                         Users
                     </div>
                 </div>

@@ -44,6 +44,7 @@ export default function ShowUsers({ show, query }) {
     useEffect(() => {
         // dont run when show is false
         if ((!users.length || isQueryChanged) && show) {
+            setIsLoading(true)
             fetch(host + '/search/users' + `?q=${query}`)
                 .then(res => res.json())
                 .then(jsonData => {

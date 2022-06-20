@@ -79,6 +79,7 @@ export default function ShowRepos({ show, query }) {
         // dont run when show is false
         //but run when show is true and query changes or when not have older result to show
         if ((!repos.length || isQueryChanged) && show) {
+            setIsLoading(true)
             fetch(host + '/search/repositories' + `?q=${query}`)
                 .then(res => res.json())
                 .then(jsonData => {
