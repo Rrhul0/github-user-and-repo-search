@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom'
 import { useState, useEffect } from 'react'
 import { parseJSON, formatDistanceToNow } from 'date-fns'
 import Loading from './loading'
+import PageSelector from './pageSelector'
 
 function ShowRepo({ repo }) {
     return (
@@ -68,37 +69,53 @@ export default function ShowRepos({ show, query }) {
     const [repos, setRepos] = useState([])
     const [isLoading, setIsLoading] = useState(true)
     const [isQueryChanged, setIsQueryChanged] = useState(false)
+    const [pagesCount, setPagesCount] = useState(0)
+    const [currentPage, setCurrentPage] = useState(1)
+    const [isPageChanged, setIsPageChanged] = useState(false)
 
     const host = 'https://api.github.com'
 
     //set setIsQueryChnage to true when query changes
     useEffect(() => {
         setIsQueryChanged(true)
+        setCurrentPage(1)
     }, [query])
+
+    useEffect(() => {
+        setIsPageChanged(true)
+    }, [currentPage])
 
     useEffect(() => {
         // dont run when show is false
         //but run when show is true and query changes or when not have older result to show
-        if ((!repos.length || isQueryChanged) && show) {
+        if ((!repos.length || isQueryChanged || isPageChanged) && show) {
             setIsLoading(true)
-            fetch(host + '/search/repositories' + `?q=${query}`)
+            fetch(host + '/search/repositories' + `?q=${query}` + `&page=${currentPage}`)
                 .then(res => res.json())
                 .then(jsonData => {
+                    const totalCount = jsonData.total_count
+                    let pages = Math.ceil(totalCount / 30)
+                    if (pages > 34) pages = 34
+                    setPagesCount(pages)
                     setRepos(jsonData.items)
                     setIsLoading(false)
                 })
                 .catch(e => console.log('error occoured', e))
             setIsQueryChanged(false)
+            setIsPageChanged(false)
         }
-    }, [show, isQueryChanged])
+    }, [show, isQueryChanged, isPageChanged])
 
     if (!show) return <></>
     if (isLoading || !repos) return <Loading />
     return (
         <div className='px-2 overflow-scroll h-full'>
-            {repos.map(repo => (
-                <ShowRepo key={repo.id} repo={repo} />
-            ))}
+            <div>
+                {repos.map(repo => (
+                    <ShowRepo key={repo.id} repo={repo} />
+                ))}
+            </div>
+            <PageSelector currentPage={currentPage} totalPages={pagesCount} onPageChange={setCurrentPage} />
         </div>
     )
 }
